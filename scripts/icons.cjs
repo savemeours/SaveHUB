@@ -1,0 +1,7 @@
+const fs=require('node:fs');const services=require('../src/services.cjs');const brands=require('@fortawesome/free-brands-svg-icons');const solid=require('@fortawesome/free-solid-svg-icons');
+const icons={};const svg=def=>{const [w,h,,,p]=def.icon;return `<svg viewBox="0 0 ${w} ${h}" aria-hidden="true">${(Array.isArray(p)?p:[p]).map(d=>`<path d="${d}"/>`).join('')}</svg>`};
+for(const s of services)icons[s.id]=svg(brands[s.icon]);
+for(const [name,key]of Object.entries({home:'faHouse',search:'faMagnifyingGlass',settings:'faSliders',layers:'faLayerGroup',back:'faArrowLeft',forward:'faArrowRight',reload:'faRotateRight',volume:'faVolumeHigh',muted:'faVolumeXmark',external:'faArrowUpRightFromSquare',sun:'faSun',arrow:'faArrowUpRightFromSquare',shield:'faShieldHalved',keyboard:'faKeyboard',globe:'faGlobe',star:'faStar',chevron:'faChevronRight',sliders:'faSliders',more:'faEllipsis',close:'faXmark',eye:'faEyeSlash',message:'faCommentDots',user:'faUser',avatar:'faCircleUser',image:'faImage',monitor:'faDesktop',send:'faPaperPlane',sidebar:'faTableColumns',check:'faCheck',lock:'faLock',download:'faDownload',focus:'faBullseye',memory:'faMicrochip'}))icons[name]=svg(solid[key]);
+fs.writeFileSync('src/icons.js','window.ICONS = '+JSON.stringify(icons)+';\n');fs.writeFileSync('src/preview-services.json',JSON.stringify({services:services.map(({domains,icon,...s})=>s),version:require('../package.json').version}));
+
+fs.writeFileSync('src/preview-data.js','window.PREVIEW_DATA = '+fs.readFileSync('src/preview-services.json','utf8')+';\n');
