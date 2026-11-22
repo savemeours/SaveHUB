@@ -1,0 +1,145 @@
+{
+  "name": "savehub",
+  "productName": "SaveHUB",
+  "version": "4.4.0",
+  "description": "Your social space, together. Desktop social hub by savemeours.",
+  "author": "savemeours",
+  "license": "MIT",
+  "main": "src/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/*.test.cjs",
+    "dist:win": "electron-builder --win nsis portable --x64",
+    "dist:linux": "electron-builder --linux AppImage deb --x64",
+    "configure:updates": "node scripts/configure-updates.cjs",
+    "icons:platforms": "node scripts/platform-icons.cjs",
+    "dist:mac": "electron-builder --mac dmg zip --arm64 --x64",
+    "dist:mac:arm64": "electron-builder --mac dmg zip --arm64",
+    "dist:mac:x64": "electron-builder --mac dmg zip --x64",
+    "dist:linux:x64": "electron-builder --linux AppImage deb --x64",
+    "dist:linux:arm64": "electron-builder --linux AppImage deb --arm64"
+  },
+  "devDependencies": {
+    "@fortawesome/free-brands-svg-icons": "^7.0.0",
+    "@fortawesome/free-solid-svg-icons": "^7.0.0",
+    "@resvg/resvg-js": "^2.6.2",
+    "electron": "45.4.1",
+    "electron-builder": "26.18.0",
+    "jsdom": "^31.0.1"
+  },
+  "build": {
+    "appId": "id.savemeours.savehub",
+    "productName": "SaveHUB",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json",
+      "LICENSE",
+      "THIRD-PARTY-NOTICES.txt"
+    ],
+    "asar": true,
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "signAndEditExecutable": true
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "SaveHUB",
+      "artifactName": "SaveHUB-Setup-${version}-${arch}.${ext}",
+      "createStartMenuShortcut": true,
+      "include": "build/installer.nsh"
+    },
+    "linux": {
+      "icon": "assets/icon.png",
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Network",
+      "artifactName": "SaveHUB-${version}-Linux-${arch}.${ext}",
+      "executableName": "savehub",
+      "maintainer": "savemeours",
+      "synopsis": "Satu ruang untuk percakapan dan komunitas",
+      "description": "SaveHUB menyatukan platform pesan dan sosial dengan multiakun, privasi tampilan, mode fokus, dan pengelola unduhan.",
+      "syncDesktopName": true,
+      "desktop": {
+        "entry": {
+          "Name": "SaveHUB",
+          "Comment": "Satu ruang untuk percakapan dan komunitas",
+          "StartupWMClass": "id.savemeours.savehub",
+          "Terminal": "false"
+        }
+      }
+    },
+    "portable": {
+      "artifactName": "SaveHUB-Portable-${version}-${arch}.${ext}"
+    },
+    "executableName": "SaveHUB",
+    "protocols": [
+      {
+        "name": "SaveHUB notification",
+        "schemes": [
+          "savehub"
+        ]
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.social-networking",
+      "icon": "assets/icon.icns",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "artifactName": "SaveHUB-${version}-macOS-${arch}.${ext}",
+      "hardenedRuntime": true,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "extendInfo": {
+        "NSCameraUsageDescription": "SaveHUB membutuhkan kamera untuk panggilan video pada platform yang kamu izinkan.",
+        "NSMicrophoneUsageDescription": "SaveHUB membutuhkan mikrofon untuk panggilan dan pesan suara pada platform yang kamu izinkan."
+      }
+    },
+    "dmg": {
+      "title": "SaveHUB ${version}",
+      "contents": [
+        {
+          "x": 130,
+          "y": 170,
+          "type": "file"
+        },
+        {
+          "x": 410,
+          "y": 170,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "window": {
+        "width": 540,
+        "height": 330
+      }
+    }
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.11",
+    "js-yaml": "^5.5.0"
+  },
+  "desktopName": "id.savemeours.savehub.desktop",
+  "homepage": "https://github.com/savemeours/SaveHUB",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/savemeours/SaveHUB.git"
+  },
+  "bugs": {
+    "url": "https://github.com/savemeours/SaveHUB/issues"
+  }
+}

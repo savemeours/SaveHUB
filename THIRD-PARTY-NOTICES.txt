@@ -1,0 +1,11 @@
+SaveHUB uses Font Awesome Free SVG icons.
+Copyright Fonticons, Inc. https://fontawesome.com/
+SVG icons: Creative Commons Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+The icons are generated from @fortawesome/free-brands-svg-icons and
+@fortawesome/free-solid-svg-icons. Brand marks belong to their respective owners.
+
+Electron is licensed under MIT, with Chromium and other bundled components
+under their respective licenses. electron-builder includes the Electron
+license files in built distributions. npm dependency licenses remain with
+their respective packages and copyright holders.
