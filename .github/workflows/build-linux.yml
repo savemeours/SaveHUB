@@ -1,0 +1,33 @@
+name: Build SaveHUB Linux
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    name: Linux ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            arch: x64
+          - runner: ubuntu-24.04-arm
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run dist:linux:${{ matrix.arch }} -- --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SaveHUB-Linux-${{ matrix.arch }}
+          path: |
+            release/*.AppImage
+            release/*.deb
+          if-no-files-found: error
