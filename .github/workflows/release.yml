@@ -74,13 +74,8 @@ jobs:
           if-no-files-found: error
       - name: Upload to GitHub release
         shell: bash
-        env:
-          PACKAGE_PATTERNS: ${{ matrix.files }}
         run: |
           shopt -s nullglob
-          packages=()
-          for pattern in $PACKAGE_PATTERNS; do
-            for package in release/$pattern; do packages+=("$package"); done
-          done
+          packages=(release/*.exe release/*.dmg release/*.zip release/*.AppImage release/*.deb)
           if [ "${#packages[@]}" -eq 0 ]; then echo "No release packages found"; exit 1; fi
           gh release upload "$RELEASE_TAG" "${packages[@]}" --repo "$GITHUB_REPOSITORY" --clobber
