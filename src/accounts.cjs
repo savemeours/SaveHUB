@@ -1,0 +1,8 @@
+'use strict';
+const {randomUUID}=require('node:crypto');const services=require('./services.cjs');
+function validService(id){if(!services.some(s=>s.id===id))throw new Error('Platform tidak dikenal');}
+function normalizeAccounts(value={}){value=value&&typeof value==='object'?value:{};return Object.fromEntries(services.map(s=>{const list=Array.isArray(value[s.id])?value[s.id].filter(a=>a&&typeof a==='object'):[];const seen=new Set(['default']);const label=(name,fallback)=>typeof name==='string'&&name.trim()?name.trim().slice(0,30):fallback;return [s.id,[{id:'default',name:label(list.find(a=>a.id==='default')?.name,'Utama')},...list.filter(a=>{if(typeof a.id!=='string'||!/^[a-zA-Z0-9-]{8,80}$/.test(a.id)||seen.has(a.id))return false;seen.add(a.id);return true;}).slice(0,9).map(a=>({id:a.id,name:label(a.name,'Akun')}))]];}));}
+function getAccount(settings,id,accountId){validService(id);return (settings.accounts?.[id]||[{id:'default',name:'Utama'}]).find(a=>a.id===(accountId||settings.selectedAccounts?.[id]||'default'));}
+function partition(id,accountId='default'){validService(id);if(accountId!=='default'&&!/^[a-zA-Z0-9-]{8,80}$/.test(accountId))throw new Error('Identitas akun tidak valid');return 'persist:savehub-'+id+(accountId==='default'?'':'-account-'+accountId);}
+function addAccount(settings,id,name){validService(id);name=String(name||'').trim();if(!name||name.length>30)throw new Error('Nama akun harus 1–30 karakter');const list=settings.accounts[id];if(list.length>=10)throw new Error('Maksimal 10 akun per platform');const account={id:randomUUID(),name};list.push(account);return account;}
+module.exports={normalizeAccounts,getAccount,partition,addAccount};

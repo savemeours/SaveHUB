@@ -1,0 +1,4 @@
+'use strict';
+function contextActions(params={}){const copy=!!String(params.selectionText||'').trim(),edit=!!params.isEditable,flags=params.editFlags||{};if(edit)return [{label:'Urungkan',role:'undo',enabled:!!flags.canUndo},{label:'Ulangi',role:'redo',enabled:!!flags.canRedo},{type:'separator'},{label:'Potong',role:'cut',enabled:!!flags.canCut},{label:'Salin',role:'copy',enabled:!!flags.canCopy},{label:'Tempel',role:'paste',enabled:!!flags.canPaste},{type:'separator'},{label:'Pilih semua',role:'selectAll',enabled:!!flags.canSelectAll}];return copy?[{label:'Salin',role:'copy'}]:[];}
+function attachSurface({wc,owner,Menu,allowed=()=>true}){wc.on('context-menu',(_event,params)=>{if(!allowed())return;const template=contextActions(params);if(template.length)Menu.buildFromTemplate(template).popup({window:owner()});});}
+module.exports={contextActions,attachSurface};

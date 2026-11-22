@@ -1,0 +1,25 @@
+const { contextBridge, ipcRenderer } = require('electron');
+contextBridge.exposeInMainWorld('hub', {
+  platform:process.platform,
+  startupReady:()=>ipcRenderer.invoke('hub:startup-ready'),
+  notificationReady:()=>ipcRenderer.invoke('hub:notification-ready'),
+  bootstrap:()=>ipcRenderer.invoke('hub:bootstrap'),
+  window:action=>ipcRenderer.invoke('hub:window',action),
+  save:settings=>ipcRenderer.invoke('hub:save',settings),
+  service:(id,action,value)=>ipcRenderer.invoke('hub:service',id,action,value),
+  layout:(bounds,covered)=>ipcRenderer.invoke('hub:layout',bounds,covered),
+  onServiceState:callback=>{const listener=(_e,value)=>callback(value);ipcRenderer.on('hub:service-state',listener);return ()=>ipcRenderer.removeListener('hub:service-state',listener);},
+  accounts:(id,action,value)=>ipcRenderer.invoke('hub:accounts',id,action,value),
+  security:(action,pin,newPin)=>ipcRenderer.invoke('hub:security',action,pin,newPin),
+  runtimeOptions:value=>ipcRenderer.invoke('hub:runtime-options',value),
+  focus:(action,value)=>ipcRenderer.invoke('hub:focus',action,value),
+  downloads:(action,id)=>ipcRenderer.invoke('hub:downloads',action,id),
+  updates:action=>ipcRenderer.invoke('hub:updates',action),
+  memory:(id,accountId)=>ipcRenderer.invoke('hub:memory',id,accountId),
+  onRuntime:callback=>{const listener=(_e,value)=>callback(value);ipcRenderer.on('hub:runtime',listener);return ()=>ipcRenderer.removeListener('hub:runtime',listener);},
+  onDownloads:callback=>{const listener=(_e,value)=>callback(value);ipcRenderer.on('hub:downloads-state',listener);return ()=>ipcRenderer.removeListener('hub:downloads-state',listener);},
+  onUpdate:callback=>{const listener=(_e,value)=>callback(value);ipcRenderer.on('hub:update-state',listener);return ()=>ipcRenderer.removeListener('hub:update-state',listener);},
+  clear:id=>ipcRenderer.invoke('hub:clear',id),
+  onCommand:callback=>{const listener=(_e,value)=>callback(value); ipcRenderer.on('hub:command',listener); return ()=>ipcRenderer.removeListener('hub:command',listener);},
+  onDownload:callback=>{const listener=(_e,value)=>callback(value); ipcRenderer.on('hub:download',listener); return ()=>ipcRenderer.removeListener('hub:download',listener);}
+});
